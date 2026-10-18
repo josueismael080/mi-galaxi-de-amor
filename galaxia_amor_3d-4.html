@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Universo de Amor ❤️</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#020006;color:white;font-family:Georgia,serif}
+#galaxia{position:fixed;inset:0}
+.titulo{position:fixed;top:5%;left:0;width:100%;padding:0 12px;text-align:center;color:#ff456d;font:bold clamp(23px,6vw,44px) Arial,sans-serif;text-shadow:0 0 10px red,0 0 30px #ff004c;z-index:2;pointer-events:none}
+.indicacion{position:fixed;bottom:3%;left:0;width:100%;text-align:center;font-size:12px;color:#ffc5dc;z-index:3;pointer-events:none}
+</style>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.166.1/examples/jsm/"}}
+</script>
+</head>
+<body>
+<div class="titulo" id="titulo">¡PARA MI PRINCESA! ❤️</div>
+<div id="galaxia"></div>
+<div class="indicacion">💖 Arrastra para girar · Pellizca para acercar 💖</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+/* PERSONALIZA ESTAS TRES PARTES */
+const nombre = "MI PELIONA ❤️";
+const encabezado = "¡PARA MI PELIONA!";
+const frases = [
+  "Te amooo mi peliona 😍💖",
+  "Cachetitos hermosos 💕😍",
+  "Eres mi vida ❤️",
+  "Mi niña preciosa 👑",
+  "Eres mi universo 🌌",
+  "Mi lugar favorito eres tú 💗",
+  "Te elegiría mil veces 💞",
+  "Mi corazón es tuyo ❤️",
+  "Eres mi felicidad 🥹",
+  "Contigo todo es bonito ✨",
+  "Mi princesa hermosa 😍",
+  "Quiero estar contigo siempre 💘",
+  "Eres mi sueño más bonito 💕",
+  "Te amo infinitamente 💖",
+  "Mi amor eterno ❤️",
+  "No te cambio por nadie 🫶",
+  "Tú y yo para siempre 💍",
+  "Mi bebé hermosa 🥰",
+  "Eres mi casualidad favorita 🌠",
+  "Gracias por existir 💗",
+  "Tus besos son mi debilidad 😘",
+  "Me encantas demasiado 💞",
+  "Mi mundo eres tú 🌎❤️",
+  "Siempre serás mi princesa 👑",
+  "Hasta el infinito contigo 🚀",
+  "Amo cada detalle de ti 😍",
+  "Mi pelioncita preciosa 💋",
+  "Eres lo mejor de mi vida 💖",
+  "Te volvería a elegir 💗",
+  "Mi corazón late por ti ❤️",
+  "Cada día me gustas más 🌹",
+  "Quiero muchos recuerdos contigo 📸",
+  "Eres mi persona favorita 💓",
+  "Un besito para mis cachetitos 😘",
+  "Mi bonita, mi todo 💖",
+  "Juntos contra el mundo 🌍",
+  "Mi razón de sonreír 😊",
+  "Siempre en mi corazón 💘"
+];
+
+document.getElementById('titulo').textContent = encabezado;
+
+const contenedor = document.getElementById('galaxia');
+const escena = new THREE.Scene();
+escena.background = new THREE.Color(0x020006);
+
+const camara = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 1500);
+camara.position.set(0, 4, 27);
+
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+contenedor.appendChild(renderer.domElement);
+
+const controles = new OrbitControls(camara, renderer.domElement);
+controles.enableDamping = true;
+controles.dampingFactor = 0.05;
+controles.enablePan = false;
+controles.minDistance = 9;
+controles.maxDistance = 55;
+controles.autoRotate = true;
+controles.autoRotateSpeed = 0.5;
+
+escena.add(new THREE.AmbientLight(0xffffff, 1.8));
+const luz = new THREE.PointLight(0xff174d, 120, 80);
+luz.position.set(0,0,3);
+escena.add(luz);
+
+const universo = new THREE.Group();
+escena.add(universo);
+
+/* Estrellas en 3D */
+const cantidad = 3200;
+const posiciones = new Float32Array(cantidad*3);
+const colores = new Float32Array(cantidad*3);
+for(let i=0;i<cantidad;i++){
+  const radio = 9 + Math.random()*65;
+  const angulo = Math.random()*Math.PI*2;
+  posiciones[i*3] = Math.cos(angulo)*radio;
+  posiciones[i*3+1] = (Math.random()-0.5)*30;
+  posiciones[i*3+2] = Math.sin(angulo)*radio;
+  colores[i*3] = 1;
+  colores[i*3+1] = 0.3+Math.random()*0.65;
+  colores[i*3+2] = 0.45+Math.random()*0.5;
+}
+const geoEstrellas = new THREE.BufferGeometry();
+geoEstrellas.setAttribute('position',new THREE.BufferAttribute(posiciones,3));
+geoEstrellas.setAttribute('color',new THREE.BufferAttribute(colores,3));
+const estrellas = new THREE.Points(geoEstrellas,new THREE.PointsMaterial({
+  size:0.15,vertexColors:true,transparent:true,opacity:0.95,
+  blending:THREE.AdditiveBlending,depthWrite:false
+}));
+universo.add(estrellas);
+
+/* Polvo y pequeñas partículas rosas */
+const polvoPos = new Float32Array(900*3);
+for(let i=0;i<900;i++){
+  const a=Math.random()*Math.PI*2, r=5+Math.random()*22;
+  polvoPos[i*3]=Math.cos(a)*r;
+  polvoPos[i*3+1]=(Math.random()-0.5)*9;
+  polvoPos[i*3+2]=Math.sin(a)*r;
+}
+const polvoGeo=new THREE.BufferGeometry();
+polvoGeo.setAttribute('position',new THREE.BufferAttribute(polvoPos,3));
+universo.add(new THREE.Points(polvoGeo,new THREE.PointsMaterial({
+  color:0xff4b91,size:0.09,transparent:true,opacity:0.7
+})));
+
+/* Órbitas luminosas */
+for(let i=0;i<5;i++){
+  const orbita=new THREE.Mesh(
+    new THREE.TorusGeometry(7+i*1.7,0.025,8,180),
+    new THREE.MeshBasicMaterial({color:i%2?0xff276d:0xff9ac5,transparent:true,opacity:0.72})
+  );
+  orbita.rotation.x=Math.PI/2.45;
+  orbita.rotation.y=i*0.23;
+  orbita.position.y=(i-2)*0.35;
+  universo.add(orbita);
+}
+
+/* Corazón 3D */
+function crearCorazon(){
+  const forma=new THREE.Shape();
+  forma.moveTo(0,-1.3);
+  forma.bezierCurveTo(-0.3,-0.5,-1.9,0.4,-1.8,1.25);
+  forma.bezierCurveTo(-1.7,2.1,-0.6,2.15,0,1.35);
+  forma.bezierCurveTo(0.6,2.15,1.7,2.1,1.8,1.25);
+  forma.bezierCurveTo(1.9,0.4,0.3,-0.5,0,-1.3);
+  const geo=new THREE.ExtrudeGeometry(forma,{depth:0.7,bevelEnabled:true,bevelSegments:5,steps:2,bevelSize:0.15,bevelThickness:0.15});
+  const mat=new THREE.MeshStandardMaterial({color:0xff073f,emissive:0xff002b,emissiveIntensity:2.1,metalness:0.2,roughness:0.25});
+  const m=new THREE.Mesh(geo,mat);
+  m.scale.set(1.15,1.15,1.15);
+  m.position.set(0,0,1);
+  return m;
+}
+const corazon=crearCorazon();
+universo.add(corazon);
+
+/* Texto como textura para que las frases vivan en el espacio 3D */
+function crearTexto(texto){
+  const c=document.createElement('canvas');
+  c.width=1024;c.height=160;
+  const x=c.getContext('2d');
+  x.font='bold 43px Georgia';
+  x.textAlign='center';x.textBaseline='middle';
+  x.shadowColor='#ff0055';x.shadowBlur=22;
+  x.fillStyle='#ffe0eb';x.fillText(texto,512,80,990);
+  const tex=new THREE.CanvasTexture(c);
+  const mat=new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthWrite:false});
+  return new THREE.Mesh(new THREE.PlaneGeometry(8,1.25),mat);
+}
+const mallasTexto=[];
+frases.forEach((frase,i)=>{
+  const m=crearTexto(frase);
+  const a=i*2.399;
+  const r=9+(i%5)*2.1;
+  m.position.set(Math.cos(a)*r,Math.sin(i*1.7)*6,Math.sin(a)*r);
+  m.rotation.y=-a;
+  m.scale.setScalar(0.68+(i%3)*0.12);
+  universo.add(m);
+  mallasTexto.push(m);
+});
+
+/* Marcos de fotos: coloca tus archivos en la carpeta fotos */
+const cargador=new THREE.TextureLoader();
+function crearMarcoFoto(ruta,indice){
+  const grupo=new THREE.Group();
+  const marco=new THREE.Mesh(
+    new THREE.PlaneGeometry(2.45,3.0),
+    new THREE.MeshBasicMaterial({color:0xffb7d0,side:THREE.DoubleSide})
+  );
+  grupo.add(marco);
+
+  const canvas=document.createElement('canvas');
+  canvas.width=256;canvas.height=256;
+  const cx=canvas.getContext('2d');
+  cx.fillStyle='#ffdce8';cx.fillRect(0,0,256,256);
+  cx.font='100px serif';cx.textAlign='center';cx.textBaseline='middle';
+  cx.fillText('❤️',128,128);
+  const texCorazon=new THREE.CanvasTexture(canvas);
+  const matFoto=new THREE.MeshBasicMaterial({map:texCorazon,side:THREE.DoubleSide});
+  const foto=new THREE.Mesh(new THREE.PlaneGeometry(2.18,2.18),matFoto);
+  foto.position.z=0.025;foto.position.y=0.2;
+  grupo.add(foto);
+
+  cargador.load(ruta,tex=>{
+    foto.material.map=tex;
+    foto.material.color.set(0xffffff);
+    foto.material.needsUpdate=true;
+  });
+
+  const a=indice*Math.PI*2/4;
+  grupo.position.set(Math.cos(a)*13,Math.sin(a)*4,Math.sin(a)*13);
+  grupo.lookAt(0,0,0);
+  universo.add(grupo);
+  return grupo;
+}
+const marcos=[
+  crearMarcoFoto('fotos/foto1.jpeg',0),
+  crearMarcoFoto('fotos/foto2.jpg',1),
+  crearMarcoFoto('fotos/foto3.jpg',2),
+  crearMarcoFoto('fotos/foto4.jpg',3)
+];
+
+/* Corazones pequeños orbitando */
+const corazones=[];
+for(let i=0;i<22;i++){
+  const m=new THREE.Mesh(
+    new THREE.SphereGeometry(0.16,10,10),
+    new THREE.MeshBasicMaterial({color:0xff3b70})
+  );
+  const a=i*Math.PI*2/22;
+  m.position.set(Math.cos(a)*(6+(i%3)),Math.sin(a*2)*2,Math.sin(a)*(6+(i%3)));
+  universo.add(m);
+  corazones.push(m);
+}
+
+/* Animación */
+const reloj=new THREE.Clock();
+function animar(){
+  requestAnimationFrame(animar);
+  const t=reloj.getElapsedTime();
+  universo.rotation.y += 0.0018;
+  estrellas.rotation.y -= 0.0003;
+  corazon.scale.setScalar(1.15+Math.sin(t*3)*0.055);
+  corazon.rotation.y=Math.sin(t*0.6)*0.12;
+
+  mallasTexto.forEach((m,i)=>{
+    m.position.y += Math.sin(t*0.7+i)*0.0015;
+  });
+
+  marcos.forEach((m,i)=>{
+    const a=t*0.18+i*Math.PI*2/4;
+    m.position.set(Math.cos(a)*13,Math.sin(a*1.4)*4,Math.sin(a)*13);
+    m.lookAt(camara.position);
+  });
+
+  corazones.forEach((m,i)=>{
+    const a=t*0.35+i*Math.PI*2/corazones.length;
+    const r=6+(i%3);
+    m.position.set(Math.cos(a)*r,Math.sin(a*2)*2,Math.sin(a)*r);
+  });
+
+  controles.update();
+  renderer.render(escena,camara);
+}
+animar();
+
+window.addEventListener('resize',()=>{
+  camara.aspect=innerWidth/innerHeight;
+  camara.updateProjectionMatrix();
+  renderer.setSize(innerWidth,innerHeight);
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+});
+</script>
+</body>
+</html>
